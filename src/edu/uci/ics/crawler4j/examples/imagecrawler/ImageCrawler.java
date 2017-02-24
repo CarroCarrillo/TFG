@@ -83,11 +83,11 @@ public class ImageCrawler extends WebCrawler {
         String url = page.getWebURL().getURL();
 
         // We are only interested in processing images which are bigger than 10k
-        if (!imgPatterns.matcher(url).matches() ||
+        /*if (!imgPatterns.matcher(url).matches() ||
             !((page.getParseData() instanceof BinaryParseData) ||
               (page.getContentData().length < (10 * 1024)))) {
             return;
-        }
+        }*/
 
         // get a unique name for storing this image
         String extension = url.substring(url.lastIndexOf('.'));

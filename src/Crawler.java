@@ -8,8 +8,8 @@ import edu.uci.ics.crawler4j.url.WebURL;
 
 public class Crawler extends WebCrawler {
 
-    private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|gif|jpg"
-                                                           + "|png|mp3|mp3|zip|gz))$");
+    private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js"
+                                                           + "|mp3|mp3|zip|gz))$");
 
     /**
      * This method receives two parameters. The first parameter is the page
@@ -25,7 +25,7 @@ public class Crawler extends WebCrawler {
      public boolean shouldVisit(Page referringPage, WebURL url) {
          String href = url.getURL().toLowerCase();
          return !FILTERS.matcher(href).matches()
-                && href.startsWith("http://www.ics.uci.edu/");
+                && href.startsWith("http://www.cervantesvirtual.com/");
      }
 
      /**

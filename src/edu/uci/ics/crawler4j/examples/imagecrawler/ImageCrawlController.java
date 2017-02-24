@@ -33,17 +33,17 @@ public class ImageCrawlController {
     private static final Logger logger = LoggerFactory.getLogger(ImageCrawlController.class);
 
     public static void main(String[] args) throws Exception {
-        if (args.length < 3) {
+       /* if (args.length < 3) {
             logger.info("Needed parameters: ");
             logger.info("\t rootFolder (it will contain intermediate crawl data)");
             logger.info("\t numberOfCralwers (number of concurrent threads)");
             logger.info("\t storageFolder (a folder for storing downloaded images)");
             return;
-        }
+        }*/
 
-        String rootFolder = args[0];
-        int numberOfCrawlers = Integer.parseInt(args[1]);
-        String storageFolder = args[2];
+        String rootFolder = "/data";
+        int numberOfCrawlers = 7;
+        String storageFolder = "/data";
 
         CrawlConfig config = new CrawlConfig();
 
@@ -55,7 +55,7 @@ public class ImageCrawlController {
      */
         config.setIncludeBinaryContentInCrawling(true);
 
-        String[] crawlDomains = {"http://uci.edu/"};
+        String[] crawlDomains = {"http://www.cervantesvirtual.com"};
 
         PageFetcher pageFetcher = new PageFetcher(config);
         RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
