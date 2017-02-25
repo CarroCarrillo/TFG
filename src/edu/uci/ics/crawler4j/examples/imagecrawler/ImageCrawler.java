@@ -43,7 +43,7 @@ public class ImageCrawler extends WebCrawler {
 
     private static final Pattern filters = Pattern.compile(
         ".*(\\.(css|js|mid|mp2|mp3|mp4|wav|avi|mov|mpeg|ram|m4v|pdf" +
-        "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
+        "|rm|smil|wmv|swf|wma|zip|rar|gz|doc|html|xml|php|shtml))$");
 
     private static final Pattern imgPatterns = Pattern.compile(".*(\\.(bmp|gif|jpe?g|png|tiff?))$");
 
@@ -89,17 +89,23 @@ public class ImageCrawler extends WebCrawler {
             return;
         }*/
 
-        // get a unique name for storing this image
+        // Nombre único para almacenar esta imagen
         String extension = url.substring(url.lastIndexOf('.'));
         String hashedName = UUID.randomUUID() + extension;
+        
+        int index = extension.indexOf("/"); //Para la extensiones que les siguen subcarpetas
+        int indexQ = extension.indexOf("?"); //Para parámetros en las URLs
 
-        // store image
-        String filename = storageFolder.getAbsolutePath() + "/" + hashedName;
-        try {
-            Files.write(page.getContentData(), new File(filename));
-            logger.info("Stored: {}", url);
-        } catch (IOException iox) {
-            logger.error("Failed to write file: " + filename, iox);
-        }
+		if(index < 0 && indexQ < 0){
+	        System.out.println(extension);
+	        // Almacenar la imagen
+	        String filename = storageFolder.getAbsolutePath() + "/" + hashedName;
+	        try {
+	            Files.write(page.getContentData(), new File(filename));
+	            logger.info("Stored: {}", url);
+	        } catch (IOException iox) {
+	            logger.error("Failed to write file: " + filename, iox);
+	        }
+		}
     }
 }

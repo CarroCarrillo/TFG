@@ -41,9 +41,9 @@ public class ImageCrawlController {
             return;
         }*/
 
-        String rootFolder = "/data";
+        String rootFolder = "C:/Users/Usuario/workspace/TFG/data";
         int numberOfCrawlers = 7;
-        String storageFolder = "/data";
+        String storageFolder = "C:/Users/Usuario/workspace/TFG/data";
 
         CrawlConfig config = new CrawlConfig();
 
