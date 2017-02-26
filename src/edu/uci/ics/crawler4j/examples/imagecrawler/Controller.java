@@ -1,23 +1,22 @@
+package edu.uci.ics.crawler4j.examples.imagecrawler;
+import edu.uci.ics.crawler4j.crawler.Configurable;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 
-public class Controller {
-    public static void main(String[] args) throws Exception {
-        String crawlStorageFolder = "/data/crawl/root";
-        int numberOfCrawlers = 7;
+public class Controller extends Configurable{
+	
+	public Controller(CrawlConfig config, PageFetcher pageFetcher,
+            RobotstxtServer robotstxtServer, String domain) throws Exception {
+		super(config);
 
-        CrawlConfig config = new CrawlConfig();
-        config.setCrawlStorageFolder(crawlStorageFolder);
-
+        int numberOfCrawlers = 1;
+        System.out.println("Dominio " + domain);
         /*
          * Instantiate the controller for this crawl.
          */
-        PageFetcher pageFetcher = new PageFetcher(config);
-        RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
-        RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
         CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
 
         /*
@@ -27,7 +26,7 @@ public class Controller {
          */
         /*controller.addSeed("http://www.cervantesvirtual.com/images/");
         controller.addSeed("http://www.cervantesvirtual.com/areas/");*/
-        controller.addSeed("http://www.cervantesvirtual.com");
+        controller.addSeed(domain);
 
         /*
          * Start the crawl. This is a blocking operation, meaning that your code

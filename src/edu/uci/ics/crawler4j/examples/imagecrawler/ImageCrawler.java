@@ -22,11 +22,19 @@ import java.io.IOException;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import org.apache.http.HttpEntity;
+
 import com.google.common.io.Files;
 
+import edu.uci.ics.crawler4j.crawler.CrawlConfig;
+import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
+import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.parser.BinaryParseData;
+import edu.uci.ics.crawler4j.parser.HtmlParseData;
+import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
+import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 import edu.uci.ics.crawler4j.url.WebURL;
 
 /**
@@ -46,6 +54,7 @@ public class ImageCrawler extends WebCrawler {
         "|rm|smil|wmv|swf|wma|zip|rar|gz|doc|html|xml|php|shtml))$");
 
     private static final Pattern imgPatterns = Pattern.compile(".*(\\.(bmp|gif|jpe?g|png|tiff?))$");
+    private static String lastUrl;
 
     private static File storageFolder;
     private static String[] crawlDomains;
@@ -62,6 +71,7 @@ public class ImageCrawler extends WebCrawler {
     @Override
     public boolean shouldVisit(Page referringPage, WebURL url) {
         String href = url.getURL().toLowerCase();
+        
         if (filters.matcher(href).matches()) {
             return false;
         }
@@ -81,6 +91,11 @@ public class ImageCrawler extends WebCrawler {
     @Override
     public void visit(Page page) {
         String url = page.getWebURL().getURL();
+        String parentURL = page.getWebURL().getParentUrl();
+        WebURL parentWebURL = new WebURL();
+        parentWebURL.setURL(parentURL);
+        Page parentPage = new Page(parentWebURL);
+        System.out.println("Padre " + parentURL);
 
         // We are only interested in processing images which are bigger than 10k
         /*if (!imgPatterns.matcher(url).matches() ||
@@ -101,11 +116,42 @@ public class ImageCrawler extends WebCrawler {
 	        // Almacenar la imagen
 	        String filename = storageFolder.getAbsolutePath() + "/" + hashedName;
 	        try {
+	        	System.out.println("Get metadata de " + parentURL + ", padre de " + url);
+	        	getMetadata(parentURL);
+	        	/*if (parentPage.getParseData() instanceof HtmlParseData) {
+		        	HtmlParseData htmlParseData = (HtmlParseData) parentPage.getParseData();
+		            String html = htmlParseData.getHtml();
+		            System.out.println(html);
+	        	}else{
+	        		System.out.println("No hace el if");
+	        	}*/
+	            
 	            Files.write(page.getContentData(), new File(filename));
 	            logger.info("Stored: {}", url);
 	        } catch (IOException iox) {
 	            logger.error("Failed to write file: " + filename, iox);
 	        }
 		}
+    }
+    
+    public void getMetadata(String parentURL){
+        String[] crawlDomains = {parentURL};
+        String rootFolder = "C:/Users/Usuario/workspace/TFG/data";
+        
+        CrawlConfig config = new CrawlConfig();
+    	config.setMaxDepthOfCrawling(0);
+    	config.setCrawlStorageFolder(rootFolder);
+    	config.setMaxDownloadSize(-1);
+    	
+        PageFetcher pageFetcher = new PageFetcher(config);
+        RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
+        RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
+        try{
+        	Controller controller = new Controller(config, pageFetcher, robotstxtServer, crawlDomains[0]);
+        }
+        catch(Exception e){
+        	 logger.error("Failed get metadata: " + e);
+        }
+        
     }
 }

@@ -1,3 +1,4 @@
+package edu.uci.ics.crawler4j.examples.imagecrawler;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -10,7 +11,6 @@ public class Crawler extends WebCrawler {
 
     private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js"
                                                            + "|mp3|mp3|zip|gz))$");
-
     /**
      * This method receives two parameters. The first parameter is the page
      * in which we have discovered this new url and the second parameter is
@@ -23,9 +23,11 @@ public class Crawler extends WebCrawler {
      */
      @Override
      public boolean shouldVisit(Page referringPage, WebURL url) {
-         String href = url.getURL().toLowerCase();
+         /*String href = url.getURL().toLowerCase();
          return !FILTERS.matcher(href).matches()
                 && href.startsWith("http://www.cervantesvirtual.com/");
+                */
+    	 return true;
      }
 
      /**
@@ -41,11 +43,8 @@ public class Crawler extends WebCrawler {
              HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
              String text = htmlParseData.getText();
              String html = htmlParseData.getHtml();
-             Set<WebURL> links = htmlParseData.getOutgoingUrls();
 
-             System.out.println("Text length: " + text.length());
-             System.out.println("Html length: " + html.length());
-             System.out.println("Number of outgoing links: " + links.size());
+             //System.out.println(html);
          }
     }
 }
