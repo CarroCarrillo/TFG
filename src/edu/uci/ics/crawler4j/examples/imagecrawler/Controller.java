@@ -31,7 +31,10 @@ public class Controller extends Configurable{
         /*
          * Start the crawl. This is a blocking operation, meaning that your code
          * will reach the line after this only when crawling is finished.
+         * 
          */
+        /*MyCrawlerFactory factory = new MyCrawlerFactory(metadata, repository);
+        controller.startNonBlocking(factory, numberOfCrawlers);*/
         controller.start(Crawler.class, numberOfCrawlers);
     }
 }

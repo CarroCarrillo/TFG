@@ -11,6 +11,14 @@ public class Crawler extends WebCrawler {
 
     private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js"
                                                            + "|mp3|mp3|zip|gz))$");
+    private String childURL;
+    private String domain;
+    
+    public Crawler(String domain, String childURL){
+    	super();
+    	this.domain = domain;
+    	this.childURL = childURL;
+    }
     /**
      * This method receives two parameters. The first parameter is the page
      * in which we have discovered this new url and the second parameter is
@@ -37,14 +45,21 @@ public class Crawler extends WebCrawler {
      @Override
      public void visit(Page page) {
          String url = page.getWebURL().getURL();
-         System.out.println("URL: " + url);
+         System.out.println("URL2: " + url);
+         System.out.println("Padre URL2: " + page.getWebURL().getParentUrl());
+         System.out.println("Dominio " + domain);
+         if(url.equals(domain)){
+        	 System.out.println("¡SON IGUALES!");
+         }
+         System.out.println("Hijo: " + this.childURL);
 
-         if (page.getParseData() instanceof HtmlParseData) {
+         /*if (page.getParseData() instanceof HtmlParseData) {
              HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
              String text = htmlParseData.getText();
              String html = htmlParseData.getHtml();
 
-             //System.out.println(html);
-         }
+             System.out.println(html);
+             
+         }*/
     }
 }
