@@ -58,7 +58,7 @@ public class ImageCrawler extends WebCrawler {
 
     private static File storageFolder;
     private static String[] crawlDomains;
-    private static String parentHtml;
+    private Page parent;
 
     public static void configure(String[] domain, String storageFolderName) {
         crawlDomains = domain;
@@ -93,19 +93,10 @@ public class ImageCrawler extends WebCrawler {
     public void visit(Page page) {
         String url = page.getWebURL().getURL();
         String parentURL = page.getWebURL().getParentUrl();
-        /*WebURL parentWebURL = new WebURL();
-        parentWebURL.setURL(parentURL);
-        Page parentPage = new Page(parentWebURL);*/
         System.out.println("Padre " + parentURL);
-        System.out.println(parentHtml);
+        System.out.println(page.getWebURL().getParentUrl());
         System.out.println("Padre " + parentURL);
-
-        // We are only interested in processing images which are bigger than 10k
-        /*if (!imgPatterns.matcher(url).matches() ||
-            !((page.getParseData() instanceof BinaryParseData) ||
-              (page.getContentData().length < (10 * 1024)))) {
-            return;
-        }*/
+        System.out.println("Hijo: " + url);
 
         // Nombre único para almacenar esta imagen
         String extension = url.substring(url.lastIndexOf('.'));
@@ -118,17 +109,7 @@ public class ImageCrawler extends WebCrawler {
 	        System.out.println(extension);
 	        // Almacenar la imagen
 	        String filename = storageFolder.getAbsolutePath() + "/" + hashedName;
-	        try {
-	        	//System.out.println("Get metadata de " + parentURL + ", padre de " + url);
-	        	//getMetadata(parentURL, url);
-	        	/*if (parentPage.getParseData() instanceof HtmlParseData) {
-		        	HtmlParseData htmlParseData = (HtmlParseData) parentPage.getParseData();
-		            String html = htmlParseData.getHtml();
-		            System.out.println(html);
-	        	}else{
-	        		System.out.println("No hace el if");
-	        	}*/
-	            
+	        try {     
 	            Files.write(page.getContentData(), new File(filename));
 	            logger.info("Stored: {}", url);
 	        } catch (IOException iox) {
@@ -136,18 +117,10 @@ public class ImageCrawler extends WebCrawler {
 	        }
 		}
 		
-		if (page.getParseData() instanceof HtmlParseData) {
-        	HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
-            this.parentHtml = htmlParseData.getHtml();
-            System.out.println("Sí hace el if");
-    	}else{
-    		System.out.println("No hace el if");
-    		this.parentHtml = null;
-    	}
-		
+		this.parent = page;
     }
     
-    public void getMetadata(String parentURL, String url){
+    /*public void getMetadata(String parentURL, String url){
         String[] crawlDomains = {parentURL};
         String rootFolder = "C:/Users/Usuario/workspace/TFG/data";
         
@@ -166,5 +139,5 @@ public class ImageCrawler extends WebCrawler {
         	 logger.error("Failed get metadata: " + e);
         }
         
-    }
+    }*/
 }
