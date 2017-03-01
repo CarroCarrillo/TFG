@@ -30,11 +30,14 @@ import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
+import edu.uci.ics.crawler4j.crawler.exceptions.PageBiggerThanMaxSizeException;
+import edu.uci.ics.crawler4j.fetcher.PageFetchResult;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.parser.BinaryParseData;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
+import edu.uci.ics.crawler4j.url.URLCanonicalizer;
 import edu.uci.ics.crawler4j.url.WebURL;
 
 /**
@@ -59,20 +62,23 @@ public class ImageCrawler extends WebCrawler {
     private static File storageFolder;
     private static String[] crawlDomains;
     private Page parent;
+    private boolean imParent = false;
 
     public static void configure(String[] domain, String storageFolderName) {
         crawlDomains = domain;
-
-        storageFolder = new File(storageFolderName);
-        if (!storageFolder.exists()) {
-            storageFolder.mkdirs();
+        
+        if(storageFolderName != null){
+	        storageFolder = new File(storageFolderName);
+	        if (!storageFolder.exists()) {
+	            storageFolder.mkdirs();
+	        }
         }
     }
 
     @Override
     public boolean shouldVisit(Page referringPage, WebURL url) {
         String href = url.getURL().toLowerCase();
-        
+        if(!imParent){
         if (filters.matcher(href).matches()) {
             return false;
         }
@@ -87,17 +93,46 @@ public class ImageCrawler extends WebCrawler {
             }
         }
         return false;
+        }else{
+        	return true;
+        }
     }
 
     @Override
     public void visit(Page page) {
+    	if(!imParent){
+    		WebURL parentWebUrl = new WebURL();
+            
+            parentWebUrl.setURL(page.getWebURL().getParentUrl());
+            parentWebUrl.imParent = true;
+            imParent = true;
+            Page parentPage = processPage(parentWebUrl);
+            System.out.println("Parent page: " + parentPage.getWebURL().getURL());
+            System.out.println("Page:        " + page.getWebURL().getURL());
+            if (parentPage.getParseData() instanceof HtmlParseData) {
+                HtmlParseData htmlParseData = (HtmlParseData) parentPage.getParseData();
+                String text = htmlParseData.getText();
+                String html = htmlParseData.getHtml();
+
+
+               // System.out.println("Text length: " + text.length());
+                //System.out.println("Html length: " + html);
+            }
+            
+            
+    	
         String url = page.getWebURL().getURL();
-        String parentURL = page.getWebURL().getParentUrl();
+       /*if(parent!=null){
+        String parentURL = parent.getWebURL().getURL();
         System.out.println("Padre " + parentURL);
         System.out.println(page.getWebURL().getParentUrl());
-        System.out.println("Padre " + parentURL);
-        System.out.println("Hijo: " + url);
 
+        System.out.println("Hijo: " + url);
+        }*/
+        
+
+        
+	
         // Nombre único para almacenar esta imagen
         String extension = url.substring(url.lastIndexOf('.'));
         String hashedName = UUID.randomUUID() + extension;
@@ -116,8 +151,10 @@ public class ImageCrawler extends WebCrawler {
 	            logger.error("Failed to write file: " + filename, iox);
 	        }
 		}
-		
-		this.parent = page;
+		if(parent == null || !parent.getWebURL().getURL().equals(page.getWebURL().getParentUrl()))
+			this.parent = page;
+    }
+    	imParent = false;
     }
     
     /*public void getMetadata(String parentURL, String url){

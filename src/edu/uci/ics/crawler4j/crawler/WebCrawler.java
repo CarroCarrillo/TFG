@@ -75,7 +75,7 @@ public class WebCrawler implements Runnable {
   /**
    * The fetcher that is used by this crawler instance to fetch the content of pages from the web.
    */
-  private PageFetcher pageFetcher;
+  protected PageFetcher pageFetcher;
 
   /**
    * The RobotstxtServer instance that is used by this crawler instance to
@@ -313,7 +313,7 @@ public class WebCrawler implements Runnable {
     // Sub-classed should override this to add their custom functionality
   }
 
-  protected void processPage(WebURL curURL) {
+  protected Page processPage(WebURL curURL) {
     PageFetchResult fetchResult = null;
     try {
       if (curURL == null) {
@@ -402,7 +402,7 @@ public class WebCrawler implements Runnable {
           } else {
             webURL.setDocid(-1);
             webURL.setDepth((short) (curURL.getDepth() + 1));
-            if ((maxCrawlDepth == -1) || (curURL.getDepth() < maxCrawlDepth)) {
+            if (webURL.imParent == false && ((maxCrawlDepth == -1) || (curURL.getDepth() < maxCrawlDepth))) {
               if (shouldVisit(page, webURL)) {
                 if (robotstxtServer.allows(webURL)) {
                   webURL.setDocid(docIdServer.getNewDocID(webURL.getURL()));
@@ -419,6 +419,7 @@ public class WebCrawler implements Runnable {
         frontier.scheduleAll(toSchedule);
 
         visit(page);
+        return page;
       }
     } catch (PageBiggerThanMaxSizeException e) {
       onPageBiggerThanMaxSize(curURL.getURL(), e.getPageSize());
@@ -433,10 +434,12 @@ public class WebCrawler implements Runnable {
     } catch (Exception e) {
       onUnhandledException(curURL, e);
     } finally {
+    	
       if (fetchResult != null) {
         fetchResult.discardContentIfNotConsumed();
       }
     }
+	return null;
   }
 
   public Thread getThread() {

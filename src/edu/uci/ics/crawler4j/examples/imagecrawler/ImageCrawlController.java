@@ -67,6 +67,6 @@ public class ImageCrawlController {
 
         ImageCrawler.configure(crawlDomains, storageFolder);
 
-        controller.start(ImageCrawler.class, numberOfCrawlers);
+        controller.startNonBlocking(ImageCrawler.class, numberOfCrawlers);
     }
 }
