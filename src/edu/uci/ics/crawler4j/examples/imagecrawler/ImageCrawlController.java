@@ -33,14 +33,6 @@ public class ImageCrawlController {
     private static final Logger logger = LoggerFactory.getLogger(ImageCrawlController.class);
 
     public static void main(String[] args) throws Exception {
-       /* if (args.length < 3) {
-            logger.info("Needed parameters: ");
-            logger.info("\t rootFolder (it will contain intermediate crawl data)");
-            logger.info("\t numberOfCralwers (number of concurrent threads)");
-            logger.info("\t storageFolder (a folder for storing downloaded images)");
-            return;
-        }*/
-
         String rootFolder = "C:/Users/Usuario/workspace/TFG/data";
         int numberOfCrawlers = 7;
         String storageFolder = "C:/Users/Usuario/workspace/TFG/data";
@@ -50,8 +42,8 @@ public class ImageCrawlController {
         config.setCrawlStorageFolder(rootFolder);
 
     /*
-     * Since images are binary content, we need to set this parameter to
-     * true to make sure they are included in the crawl.
+     * Ya que nuestras imágenes son contenido binario, necesitamos
+     * establecer este parámetro a verdadero para que las tenga en cuenta.
      */
         config.setIncludeBinaryContentInCrawling(true);
 

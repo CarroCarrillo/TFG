@@ -19,6 +19,7 @@ package edu.uci.ics.crawler4j.examples.imagecrawler;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -57,11 +58,9 @@ public class ImageCrawler extends WebCrawler {
         "|rm|smil|wmv|swf|wma|zip|rar|gz|doc|html|xml|php|shtml))$");
 
     private static final Pattern imgPatterns = Pattern.compile(".*(\\.(bmp|gif|jpe?g|png|tiff?))$");
-    private static String lastUrl;
 
     private static File storageFolder;
     private static String[] crawlDomains;
-    private Page parent;
     private boolean imParent = false;
 
     public static void configure(String[] domain, String storageFolderName) {
@@ -87,11 +86,11 @@ public class ImageCrawler extends WebCrawler {
             return true;
         }
 
-        for (String domain : crawlDomains) {
-            if (href.startsWith(domain)) {
-                return true;
-            }
+  
+        if (href.startsWith("http://www.cervantesvirtual.com")) {
+            return true;
         }
+        
         return false;
         }else{
         	return true;
@@ -100,60 +99,62 @@ public class ImageCrawler extends WebCrawler {
 
     @Override
     public void visit(Page page) {
+    	logger.info("Nueva Página");
     	if(!imParent){
-    		WebURL parentWebUrl = new WebURL();
-            
-            parentWebUrl.setURL(page.getWebURL().getParentUrl());
-            parentWebUrl.imParent = true;
-            imParent = true;
-            Page parentPage = processPage(parentWebUrl);
-            System.out.println("Parent page: " + parentPage.getWebURL().getURL());
-            System.out.println("Page:        " + page.getWebURL().getURL());
-            if (parentPage.getParseData() instanceof HtmlParseData) {
-                HtmlParseData htmlParseData = (HtmlParseData) parentPage.getParseData();
-                String text = htmlParseData.getText();
-                String html = htmlParseData.getHtml();
-
-
-               // System.out.println("Text length: " + text.length());
-                //System.out.println("Html length: " + html);
-            }
-            
-            
-    	
-        String url = page.getWebURL().getURL();
-       /*if(parent!=null){
-        String parentURL = parent.getWebURL().getURL();
-        System.out.println("Padre " + parentURL);
-        System.out.println(page.getWebURL().getParentUrl());
-
-        System.out.println("Hijo: " + url);
-        }*/
-        
-
-        
-	
-        // Nombre único para almacenar esta imagen
-        String extension = url.substring(url.lastIndexOf('.'));
-        String hashedName = UUID.randomUUID() + extension;
-        
-        int index = extension.indexOf("/"); //Para la extensiones que les siguen subcarpetas
-        int indexQ = extension.indexOf("?"); //Para parámetros en las URLs
-
-		if(index < 0 && indexQ < 0){
-	        System.out.println(extension);
-	        // Almacenar la imagen
-	        String filename = storageFolder.getAbsolutePath() + "/" + hashedName;
-	        try {     
-	            Files.write(page.getContentData(), new File(filename));
-	            logger.info("Stored: {}", url);
-	        } catch (IOException iox) {
-	            logger.error("Failed to write file: " + filename, iox);
-	        }
-		}
-		if(parent == null || !parent.getWebURL().getURL().equals(page.getWebURL().getParentUrl()))
-			this.parent = page;
-    }
+    		if(shouldVisit(page, page.getWebURL())){
+		        String url = page.getWebURL().getURL();
+			
+		        // Nombre único para almacenar esta imagen
+		        String extension = url.substring(url.lastIndexOf('.'));
+		        String hashedName = UUID.randomUUID() + extension;
+		        
+		        String imageName = url.substring(url.lastIndexOf('/'));
+		        if(imageName.equals("/")){
+		        	logger.info("Pasa");
+		        	imageName = url.substring(0, url.lastIndexOf('/'));
+		        	imageName = imageName.substring(imageName.lastIndexOf('/'));
+		        }
+		        WebURL parentWebUrl = new WebURL();
+		        logger.info(imageName);
+	            
+	            parentWebUrl.setURL(page.getWebURL().getParentUrl());
+	            parentWebUrl.imParent = true;
+	            imParent = true;
+	            Page parentPage = processPage(parentWebUrl);
+	            logger.info("Parent page: " + parentPage.getWebURL().getURL());
+	            logger.info("Page:        " + page.getWebURL().getURL());
+	            if (parentPage.getParseData() instanceof HtmlParseData) {
+	                HtmlParseData htmlParseData = (HtmlParseData) parentPage.getParseData();
+	                String html = htmlParseData.getHtml();
+	                ArrayList<Integer> occurrences = new ArrayList<Integer>();
+	                
+	                int index = html.indexOf(imageName);
+	                while(index >= 0) {
+	                   System.out.println(index);
+	                   occurrences.add(index);
+	                   index = html.indexOf(imageName, index+1);
+	                }
+	                logger.info(occurrences.toString());
+	               // System.out.println("Text length: " + text.length());
+	                //System.out.println("Html length: " + html);
+	            }
+		        
+		        int index = extension.indexOf("/"); //Para la extensiones que les siguen subcarpetas
+		        int indexQ = extension.indexOf("?"); //Para parámetros en las URLs
+		
+				if(index < 0 && indexQ < 0){
+			        System.out.println(extension);
+			        // Almacenar la imagen
+			        String filename = storageFolder.getAbsolutePath() + "/" + hashedName;
+			        try {     
+			            Files.write(page.getContentData(), new File(filename));
+			            logger.info("Stored: {}", url);
+			        } catch (IOException iox) {
+			            logger.error("Failed to write file: " + filename, iox);
+			        }
+				}
+	    	}
+    	}
     	imParent = false;
     }
     
