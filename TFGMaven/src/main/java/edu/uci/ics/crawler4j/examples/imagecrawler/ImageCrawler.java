@@ -23,6 +23,9 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 import org.apache.http.HttpEntity;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import com.google.common.io.Files;
 
@@ -98,29 +101,24 @@ public class ImageCrawler extends WebCrawler {
 
     @Override
     public void visit(Page page) {
-    	logger.info("Nueva Página");
+    	System.out.println("Nueva PÃ¡gina");
     	if(!imParent){
     		if(shouldVisit(page, page.getWebURL()) && page.getWebURL().getParentUrl() != null){
 		        String url = page.getWebURL().getURL();
-			
-		        // Nombre único para almacenar esta imagen
+		        
+		    	// Nombre Ãºnico para almacenar esta imagen
 		        String extension = url.substring(url.lastIndexOf('.'));
 		        String hashedName = UUID.randomUUID() + extension;
-		        
-		        String imageName = url.substring(url.lastIndexOf('/'));
-		        if(imageName.equals("/")){
-		        	imageName = url.substring(0, url.lastIndexOf('/'));
-		        	imageName = imageName.substring(imageName.lastIndexOf('/'));
-		        }
+		        String imageName = getImageName(url);
 		        WebURL parentWebUrl = new WebURL();
-		        logger.info(imageName);
+		        System.out.println(imageName);
 	            
 	            parentWebUrl.setURL(page.getWebURL().getParentUrl());
 	            parentWebUrl.imParent = true;
 	            imParent = true;
 	            Page parentPage = processPage(parentWebUrl);
-	            logger.info("Parent page: " + parentPage.getWebURL().getURL());
-	            logger.info("Page:        " + page.getWebURL().getURL());
+	            //System.out.println("Parent page: " + parentPage.getWebURL().getURL());
+	            //System.out.println("Page:        " + page.getWebURL().getURL());
 	            if (parentPage.getParseData() instanceof HtmlParseData) {
 	                HtmlParseData htmlParseData = (HtmlParseData) parentPage.getParseData();
 	                String html = htmlParseData.getHtml();
@@ -132,7 +130,9 @@ public class ImageCrawler extends WebCrawler {
 	                   occurrences.add(index);
 	                   index = html.indexOf(imageName, index+1);
 	                }
-	                logger.info(occurrences.toString());
+	                Document document = Jsoup.parse(html);
+	                Elements pngs = document.select("img");
+	                System.out.println(pngs.toString());
 	                if(occurrences.size() == 1){
 	                	
 	                	String title = html.substring(occurrences.get(0));
@@ -141,7 +141,7 @@ public class ImageCrawler extends WebCrawler {
 	            }
 		        
 		        int index = extension.indexOf("/"); //Para la extensiones que les siguen subcarpetas
-		        int indexQ = extension.indexOf("?"); //Para parámetros en las URLs
+		        int indexQ = extension.indexOf("?"); //Para parÃ¡metros en las URLs
 		
 				if(index < 0 && indexQ < 0){
 			        System.out.println(extension);
@@ -149,13 +149,22 @@ public class ImageCrawler extends WebCrawler {
 			        String filename = storageFolder.getAbsolutePath() + "/" + hashedName;
 			        try {     
 			            Files.write(page.getContentData(), new File(filename));
-			            logger.info("Stored: {}", url);
+			            System.out.println("Stored: {}" + url);
 			        } catch (IOException iox) {
-			            logger.error("Failed to write file: " + filename, iox);
+			        	System.out.println("Failed to write file: " + filename + " " + iox);
 			        }
 				}
 	    	}
     	}
     	imParent = false;
+    }
+    
+    public String getImageName(String url){
+        String imageName = url.substring(url.lastIndexOf('/'));
+        if(imageName.equals("/")){
+        	imageName = url.substring(0, url.lastIndexOf('/'));
+        	imageName = imageName.substring(imageName.lastIndexOf('/'));
+        }
+        return imageName;
     }
 }
