@@ -109,47 +109,50 @@ public class ImageCrawler extends WebCrawler {
 		    	// Nombre único para almacenar esta imagen
 		        String extension = url.substring(url.lastIndexOf('.'));
 		        String hashedName = UUID.randomUUID() + extension;
-		        String imageName = getImageName(url);
-		        WebURL parentWebUrl = new WebURL();
-		        System.out.println(imageName);
-	            
-	            parentWebUrl.setURL(page.getWebURL().getParentUrl());
-	            parentWebUrl.imParent = true;
-	            imParent = true;
-	            Page parentPage = processPage(parentWebUrl);
-	            //System.out.println("Parent page: " + parentPage.getWebURL().getURL());
-	            //System.out.println("Page:        " + page.getWebURL().getURL());
-	            if (parentPage.getParseData() instanceof HtmlParseData) {
-	                HtmlParseData htmlParseData = (HtmlParseData) parentPage.getParseData();
-	                String html = htmlParseData.getHtml();
-	                ArrayList<Integer> occurrences = new ArrayList<Integer>();
-	                
-	                int index = html.indexOf(imageName);
-	                while(index >= 0) {
-	                   System.out.println(index);
-	                   occurrences.add(index);
-	                   index = html.indexOf(imageName, index+1);
-	                }
-	                Document document = Jsoup.parse(html);
-	                Elements pngs = document.select("img");
-	                System.out.println(pngs.toString());
-	                if(occurrences.size() == 1){
-	                	
-	                	String title = html.substring(occurrences.get(0));
-	                	
-	                }
-	            }
 		        
 		        int index = extension.indexOf("/"); //Para la extensiones que les siguen subcarpetas
 		        int indexQ = extension.indexOf("?"); //Para parámetros en las URLs
 		
 				if(index < 0 && indexQ < 0){
-			        System.out.println(extension);
+		        
+			        String imageName = getImageName(url);
+			        WebURL parentWebUrl = new WebURL();
+		            
+		            parentWebUrl.setURL(page.getWebURL().getParentUrl());
+		            parentWebUrl.imParent = true;
+		            imParent = true;
+		            Page parentPage = processPage(parentWebUrl);
+		            
+		            if (parentPage.getParseData() instanceof HtmlParseData) {
+		                HtmlParseData htmlParseData = (HtmlParseData) parentPage.getParseData();
+		                String html = htmlParseData.getHtml();
+		               
+		                Document document = Jsoup.parse(html);
+		                Elements pngs = document.select("[src*=" + imageName + "], [href*=" + imageName + "]");
+		                Elements parents = pngs.parents();
+		                Document parentsParsed = Jsoup.parse(parents.html());
+		                String h2 = parentsParsed.getElementsByTag("h2").last().text();
+		                String title = pngs.attr("title");
+		                String alt = pngs.attr("alt");
+		                String h1 = parentsParsed.getElementsByTag("h1").last().text();
+		                /*System.out.println(imageName);
+		                System.out.println(pngs.toString());
+		                */
+		                System.out.println("Parent page: " + parentPage.getWebURL().getURL());
+		                System.out.println("Page:        " + page.getWebURL().getURL());
+		                System.out.println("Nombre: " + imageName);
+		                System.out.println("H1: " + h1);
+		                System.out.println("H2: " + h2);
+			            System.out.println("Título: " + title);
+			            System.out.println("Alt: " + alt);
+				        System.out.println("Extensión: " + extension);
+		            }		        
+		         
 			        // Almacenar la imagen
 			        String filename = storageFolder.getAbsolutePath() + "/" + hashedName;
 			        try {     
 			            Files.write(page.getContentData(), new File(filename));
-			            System.out.println("Stored: {}" + url);
+			            System.out.println("Stored: " + url);
 			        } catch (IOException iox) {
 			        	System.out.println("Failed to write file: " + filename + " " + iox);
 			        }
