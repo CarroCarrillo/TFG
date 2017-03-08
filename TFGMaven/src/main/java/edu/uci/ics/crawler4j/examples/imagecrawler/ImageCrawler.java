@@ -18,29 +18,19 @@ package edu.uci.ics.crawler4j.examples.imagecrawler;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import org.apache.http.HttpEntity;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import com.google.common.io.Files;
 
-import edu.uci.ics.crawler4j.crawler.CrawlConfig;
-import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
-import edu.uci.ics.crawler4j.crawler.exceptions.PageBiggerThanMaxSizeException;
-import edu.uci.ics.crawler4j.fetcher.PageFetchResult;
-import edu.uci.ics.crawler4j.fetcher.PageFetcher;
-import edu.uci.ics.crawler4j.parser.BinaryParseData;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
-import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
-import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
-import edu.uci.ics.crawler4j.url.URLCanonicalizer;
 import edu.uci.ics.crawler4j.url.WebURL;
 
 /**
@@ -105,7 +95,13 @@ public class ImageCrawler extends WebCrawler {
     	if(!imParent){
     		if(shouldVisit(page, page.getWebURL()) && page.getWebURL().getParentUrl() != null){
 		        String url = page.getWebURL().getURL();
-		        
+		        /*System.out.println("Hola");
+		        List<String> resultList = ImagesRecognizer.recognize(url);
+                System.out.println("Adiós");
+                // Iteration of Result
+                for(String result : resultList) {
+                	System.out.println(result);
+                }*/
 		    	// Nombre único para almacenar esta imagen
 		        String extension = url.substring(url.lastIndexOf('.'));
 		        String hashedName = UUID.randomUUID() + extension;
@@ -138,6 +134,7 @@ public class ImageCrawler extends WebCrawler {
 		                /*System.out.println(imageName);
 		                System.out.println(pngs.toString());
 		                */
+		                
 		                System.out.println("Parent page: " + parentPage.getWebURL().getURL());
 		                System.out.println("Page:        " + page.getWebURL().getURL());
 		                System.out.println("Nombre: " + imageName);
