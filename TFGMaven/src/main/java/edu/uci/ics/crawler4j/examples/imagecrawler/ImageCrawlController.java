@@ -33,9 +33,9 @@ public class ImageCrawlController {
     private static final Logger logger = LoggerFactory.getLogger(ImageCrawlController.class);
 
     public static void main(String[] args) throws Exception {
-        String rootFolder = "C:/Users/Usuario/workspace/TFGMaven/data";
+        String rootFolder = "C:/Users/dcm36/workspace/TFG/TFGMaven/data";
         int numberOfCrawlers = 7;
-        String storageFolder = "C:/Users/Usuario/workspace/TFGMaven/data";
+        String storageFolder = "C:/Users/dcm36/workspace/TFG/TFGMaven/data";
 
         CrawlConfig config = new CrawlConfig();
 
