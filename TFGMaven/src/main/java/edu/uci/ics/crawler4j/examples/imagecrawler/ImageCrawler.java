@@ -134,6 +134,7 @@ public class ImageCrawler extends WebCrawler {
 		                /*System.out.println(imageName);
 		                System.out.println(pngs.toString());
 		                */
+		                imageName = imageName.split("/")[1];
 		                
 		                System.out.println("Parent page: " + parentPage.getWebURL().getURL());
 		                System.out.println("Page:        " + page.getWebURL().getURL());
@@ -143,6 +144,9 @@ public class ImageCrawler extends WebCrawler {
 			            System.out.println("Título: " + title);
 			            System.out.println("Alt: " + alt);
 				        System.out.println("Extensión: " + extension);
+				        
+				        AccessDB ac = new AccessDB();
+				        ac.Guardar(imageName, alt,  title + ". " + h1 + ". " + h2, parentPage.getWebURL().getURL(), extension);
 		            }		        
 		         
 			        // Almacenar la imagen
