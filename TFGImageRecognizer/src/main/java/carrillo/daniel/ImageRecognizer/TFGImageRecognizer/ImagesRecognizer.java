@@ -1,5 +1,6 @@
-package edu.uci.ics.crawler4j.examples.imagecrawler;
+package carrillo.daniel.ImageRecognizer.TFGImageRecognizer;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class ImagesRecognizer {
 				client.getDefaultModels().generalModel() // You can also do client.getModelByID("id") to get custom models
 		         	.predict()
 		         	.withInputs(
-		         			ClarifaiInput.forImage(ClarifaiImage.of(imageUrl))
+		         			ClarifaiInput.forImage(ClarifaiImage.of(new File(imageUrl)))
 		         			)
 		         	.executeSync()
 		         	.get();
