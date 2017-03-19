@@ -1,4 +1,4 @@
-package edu.uci.ics.crawler4j.examples.imagecrawler;
+package carrillo.daniel.ImageRecognizer.TFGImageRecognizer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,7 +10,7 @@ import org.apache.commons.dbcp.BasicDataSource;
 
 public class AccessDB {
 	
-	public int Guardar(String title, String subject, String description, String source, String format, String hashedName){
+	public int Guardar(String coverage, String hashedName){
 
 		//Pool metodospool = new Pool();
 		BasicDataSource basicDataSource = new BasicDataSource();
@@ -23,31 +23,15 @@ public class AccessDB {
 	
 		Connection con = null;
 	
-		String SSQL = "INSERT INTO image (title, subject, description, source, languaje, relation, coverage, creator, publisher, contributor, rights, date, type, format, identifier, hashedName) "
-		            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String SSQL = "UPDATE image SET coverage = ? WHERE hashedName = ?";
 
-		Date date = new Date();
 	    try {
 	    
 	        con = basicDataSource.getConnection();
 	        
 	        PreparedStatement psql = con.prepareStatement(SSQL);
-	        psql.setString(1, title);
-	        psql.setString(2, subject);
-	        psql.setString(3, description);
-	        psql.setString(4, source);
-	        psql.setString(5, null);
-	        psql.setString(6, null);
-	        psql.setString(7, null);
-	        psql.setString(8, null);
-	        psql.setString(9, null);
-	        psql.setString(10, null);
-	        psql.setString(11, null);
-	        psql.setDate(12, null);
-	        psql.setString(13, null);
-	        psql.setString(14, format);
-	        psql.setString(15, null);
-	        psql.setString(16, hashedName);
+	        psql.setString(1, coverage);
+	        psql.setString(2, hashedName);
 	        
 	        resultado = psql.executeUpdate();
 	        

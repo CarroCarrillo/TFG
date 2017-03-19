@@ -146,7 +146,7 @@ public class ImageCrawler extends WebCrawler {
 				        System.out.println("Extensión: " + extension);
 				        
 				        AccessDB ac = new AccessDB();
-				        ac.Guardar(imageName, alt,  title + ". " + h1 + ". " + h2, parentPage.getWebURL().getURL(), extension);
+				        ac.Guardar(imageName, alt,  title + " " + h1 + " " + h2, parentPage.getWebURL().getURL(), extension, hashedName);
 		            }		        
 		         
 			        // Almacenar la imagen
