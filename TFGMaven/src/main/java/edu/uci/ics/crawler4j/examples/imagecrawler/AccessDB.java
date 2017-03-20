@@ -10,7 +10,7 @@ import org.apache.commons.dbcp.BasicDataSource;
 
 public class AccessDB {
 	
-	public int Guardar(String title, String subject, String description, String source, String format, String hashedName){
+	public int Guardar(String title, String description, String source, String format, String hashedName){
 
 		//Pool metodospool = new Pool();
 		BasicDataSource basicDataSource = new BasicDataSource();
@@ -33,7 +33,7 @@ public class AccessDB {
 	        
 	        PreparedStatement psql = con.prepareStatement(SSQL);
 	        psql.setString(1, title);
-	        psql.setString(2, subject);
+	        psql.setString(2, null);
 	        psql.setString(3, description);
 	        psql.setString(4, source);
 	        psql.setString(5, null);

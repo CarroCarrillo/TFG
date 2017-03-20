@@ -47,7 +47,12 @@ public class ImageCrawlController {
      */
         config.setIncludeBinaryContentInCrawling(true);
 
-        String[] crawlDomains = {"http://www.cervantesvirtual.com"};
+        String[] crawlDomains = {"http://www.cervantesvirtual.com",
+        		"http://www.cervantesvirtual.com/portales/miguel_de_cervantes/imagenes_biblioteca_virtual/",
+        		"http://www.cervantesvirtual.com/portales/miguel_de_cervantes/imagenes_autor_retratos/",
+        		"http://www.cervantesvirtual.com/portales/miguel_de_cervantes/imagenes_filatelia_quijote/",
+        		"http://www.cervantesvirtual.com/portales/jose_zorrilla/retratos/",
+        		"http://www.cervantesvirtual.com/portales/biblioteca_literatura_infantil_juvenil/"};
 
         PageFetcher pageFetcher = new PageFetcher(config);
         RobotstxtConfig robotstxtConfig = new RobotstxtConfig();

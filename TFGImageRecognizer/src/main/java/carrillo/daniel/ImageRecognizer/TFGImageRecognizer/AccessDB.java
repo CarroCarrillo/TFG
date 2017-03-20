@@ -10,7 +10,7 @@ import org.apache.commons.dbcp.BasicDataSource;
 
 public class AccessDB {
 	
-	public int Guardar(String coverage, String hashedName){
+	public int Guardar(String subject, String hashedName){
 
 		//Pool metodospool = new Pool();
 		BasicDataSource basicDataSource = new BasicDataSource();
@@ -23,14 +23,14 @@ public class AccessDB {
 	
 		Connection con = null;
 	
-		String SSQL = "UPDATE image SET coverage = ? WHERE hashedName = ?";
+		String SSQL = "UPDATE image SET subject = ? WHERE hashedName = ?";
 
 	    try {
 	    
 	        con = basicDataSource.getConnection();
 	        
 	        PreparedStatement psql = con.prepareStatement(SSQL);
-	        psql.setString(1, coverage);
+	        psql.setString(1, subject);
 	        psql.setString(2, hashedName);
 	        
 	        resultado = psql.executeUpdate();

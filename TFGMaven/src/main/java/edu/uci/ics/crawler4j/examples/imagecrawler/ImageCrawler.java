@@ -145,8 +145,22 @@ public class ImageCrawler extends WebCrawler {
 			            System.out.println("Alt: " + alt);
 				        System.out.println("Extensión: " + extension);
 				        
+				        if(alt.equals("") || alt == null){
+				        	alt = title;
+				        }
+				        
+				        if(alt.equals("") || alt == null){
+				        	alt = h2;
+				        }
+				        
+				        if(alt.equals("") || alt == null){ 
+				        	alt = h1;
+				        }
+				        
+				        System.out.println("Después alt: " + alt);
+				        
 				        AccessDB ac = new AccessDB();
-				        ac.Guardar(imageName, alt,  title + " " + h1 + " " + h2, parentPage.getWebURL().getURL(), extension, hashedName);
+				        ac.Guardar(alt,  imageName + " " + title + " " + h1 + " " + h2, parentPage.getWebURL().getURL(), extension, hashedName);
 		            }		        
 		         
 			        // Almacenar la imagen
