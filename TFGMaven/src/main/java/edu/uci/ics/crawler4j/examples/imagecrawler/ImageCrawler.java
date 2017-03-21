@@ -1,4 +1,4 @@
-package edu.uci.ics.crawler4j.examples.imagecrawler;
+﻿package edu.uci.ics.crawler4j.examples.imagecrawler;
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -95,13 +95,7 @@ public class ImageCrawler extends WebCrawler {
     	if(!imParent){
     		if(shouldVisit(page, page.getWebURL()) && page.getWebURL().getParentUrl() != null){
 		        String url = page.getWebURL().getURL();
-		        /*System.out.println("Hola");
-		        List<String> resultList = ImagesRecognizer.recognize(url);
-                System.out.println("Adiós");
-                // Iteration of Result
-                for(String result : resultList) {
-                	System.out.println(result);
-                }*/
+		       
 		    	// Nombre único para almacenar esta imagen
 		        String extension = url.substring(url.lastIndexOf('.'));
 		        String hashedName = UUID.randomUUID() + extension;

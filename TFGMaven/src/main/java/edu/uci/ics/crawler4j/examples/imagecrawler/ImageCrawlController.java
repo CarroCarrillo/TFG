@@ -34,7 +34,7 @@ public class ImageCrawlController {
 
     public static void main(String[] args) throws Exception {
         String rootFolder = "C:/Users/Usuario/workspace/TFG/TFGMaven/data";
-        int numberOfCrawlers = 7;
+        int numberOfCrawlers = 16;
         String storageFolder = "C:/Users/Usuario/workspace/TFG/TFGMaven/data";
 
         CrawlConfig config = new CrawlConfig();
