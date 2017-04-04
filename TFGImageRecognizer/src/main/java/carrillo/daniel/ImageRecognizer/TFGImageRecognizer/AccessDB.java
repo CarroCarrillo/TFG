@@ -23,7 +23,7 @@ public class AccessDB {
 	
 		Connection con = null;
 	
-		String SSQL = "UPDATE image SET subject = ? WHERE hashedName = ?";
+		String SSQL = "UPDATE images SET subject = ? WHERE hashedName = ?";
 
 	    try {
 	    

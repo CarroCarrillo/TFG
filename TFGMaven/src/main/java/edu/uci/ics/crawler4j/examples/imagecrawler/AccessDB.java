@@ -23,7 +23,7 @@ public class AccessDB {
 	
 		Connection con = null;
 	
-		String SSQL = "INSERT INTO image (title, subject, description, source, languaje, relation, coverage, creator, publisher, contributor, rights, date, type, format, identifier, hashedName) "
+		String SSQL = "INSERT INTO images (title, subject, description, source, language, relation, coverage, creator, publisher, contributor, rights, date, type, format, identifier, hashedName) "
 		            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		Date date = new Date();

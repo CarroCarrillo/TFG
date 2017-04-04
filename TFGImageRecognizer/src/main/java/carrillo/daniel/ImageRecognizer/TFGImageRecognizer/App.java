@@ -12,22 +12,27 @@ public class App
     	File dir = new File("C:/Users/Usuario/workspace/TFG/TFGMaven/data/");
     	File listFile[] = dir.listFiles();
     	for (File item : listFile) {
-    		String subject = "";
-    		String path = item.getPath();
-    	    System.out.println(path);
-    	    String ext = FilenameUtils.getExtension(path); 
-    	    System.out.println(ext);
-    	    if(!ext.equals("ico") && !ext.equals("db") && !ext.equals("")){
-		    	List<String> resultList = ImagesRecognizer.recognize(path);
-		       
-		    	// Iteration of Result
-		        for(String result : resultList) {
-		        	subject += result + "/";
-		        }
-		        //Las imágenes .ico me dan error
-		        AccessDB ac = new AccessDB();
-		        ac.Guardar(subject, item.getName());
-    	    }
+    		try{
+	    		String subject = "";
+	    		String path = item.getPath();
+	    	    System.out.println(path);
+	    	    String ext = FilenameUtils.getExtension(path); 
+	    	    System.out.println(ext);
+	    	    if(!ext.equals("ico") && !ext.equals("db") && !ext.equals("")){
+			    	List<String> resultList = ImagesRecognizer.recognize(path);
+			       
+			    	// Iteration of Result
+			        for(String result : resultList) {
+			        	subject += result + "/";
+			        }
+			        //Las imágenes .ico me dan error
+			        AccessDB ac = new AccessDB();
+			        ac.Guardar(subject, item.getName());
+	    	    }
+    		}
+    		catch(Exception e){
+    			System.err.println(e.getMessage());
+    		}
 	    }
     	System.out.println("Terminado");
     }
