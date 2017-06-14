@@ -9,7 +9,7 @@ public class App
 {
     public static void main( String[] args )
     {
-    	File dir = new File("C:/Users/Usuario/workspace/TFG/TFGMaven/data/");
+    	File dir = new File("C:/Users/Daniel/workspace/TFG/TFGMaven/data/");
     	File listFile[] = dir.listFiles();
     	for (File item : listFile) {
     		try{

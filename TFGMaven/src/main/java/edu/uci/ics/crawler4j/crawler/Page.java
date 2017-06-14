@@ -21,7 +21,7 @@ import java.nio.charset.Charset;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
-import org.apache.http.entity.ContentType;
+import org.apache.http.entity.*;
 import org.apache.http.util.EntityUtils;
 
 import edu.uci.ics.crawler4j.parser.ParseData;
