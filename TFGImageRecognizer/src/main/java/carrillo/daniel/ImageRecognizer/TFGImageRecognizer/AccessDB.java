@@ -16,7 +16,7 @@ public class AccessDB {
 		BasicDataSource basicDataSource = new BasicDataSource();
 		// Ejemplo con base de datos MySQL
 		basicDataSource.setDriverClassName("com.mysql.jdbc.Driver");
-		basicDataSource.setUrl("jdbc:mysql://localhost:3306/tfgdb");
+		basicDataSource.setUrl("jdbc:mysql://localhost:3306/tfg");
 		basicDataSource.setUsername("root");
 		basicDataSource.setPassword("laravel");
 		int resultado = 0;

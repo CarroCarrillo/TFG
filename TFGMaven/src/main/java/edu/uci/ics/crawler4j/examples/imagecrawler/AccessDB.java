@@ -3,8 +3,6 @@ package edu.uci.ics.crawler4j.examples.imagecrawler;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Date;
-
 import javax.swing.JOptionPane;
 import org.apache.commons.dbcp.BasicDataSource;
 
@@ -16,7 +14,7 @@ public class AccessDB {
 		BasicDataSource basicDataSource = new BasicDataSource();
 		// Ejemplo con base de datos MySQL
 		basicDataSource.setDriverClassName("com.mysql.jdbc.Driver");
-		basicDataSource.setUrl("jdbc:mysql://localhost:3306/tfgdb");
+		basicDataSource.setUrl("jdbc:mysql://localhost:3306/tfg");
 		basicDataSource.setUsername("root");
 		basicDataSource.setPassword("laravel");
 		int resultado = 0;
@@ -26,7 +24,7 @@ public class AccessDB {
 		String SSQL = "INSERT INTO images (title, subject, description, source, language, relation, coverage, creator, publisher, contributor, rights, date, type, format, identifier, hashedName) "
 		            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-		Date date = new Date();
+		java.util.Date date = new java.util.Date();
 	    try {
 	    
 	        con = basicDataSource.getConnection();
@@ -43,7 +41,7 @@ public class AccessDB {
 	        psql.setString(9, null);
 	        psql.setString(10, null);
 	        psql.setString(11, null);
-	        psql.setDate(12, null);
+	        psql.setDate(12, new java.sql.Date(date.getTime()));
 	        psql.setString(13, null);
 	        psql.setString(14, format);
 	        psql.setString(15, null);
